@@ -1,0 +1,8 @@
+{
+    "presets": ["@babel/env", "@babel/preset-flow", "@babel/preset-react"],
+    "env": {
+      "test": {
+        "plugins": ["transform-class-properties"]
+      }
+    }
+}
