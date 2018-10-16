@@ -151,7 +151,8 @@ OrderBook.propTypes = {
         bids: PropTypes.array,
         asks: PropTypes.array
     }).isRequired,
-    onNewData: PropTypes.func.isRequired
+    onNewData: PropTypes.func.isRequired,
+    clearData: PropTypes.func.isRequired
 };
 
 export default OrderBook;
