@@ -8,28 +8,32 @@ const port = 3001;
 const http = require('http').Server(app);
 const io = require('socket.io')(http);
 const fields = {
-    books: ['price', 'count', 'amount'],
+    book: ['price', 'count', 'amount'],
     trades: ['id', 'mts', 'amount', 'price']
 };
 
 const zipBooks = (channel, data) => {
     let result = [];
+
     // it can be a set of books or just one book
-    if (_isArray(data[1][0])) {
-        result = _map(data[1], item => _zipObject(fields[channel], item));
+    if (_isArray(data[0]) || _isArray(data[1][0])) {
+        const d = _isArray(data[0]) ? data : data[1];
+        result = _map(d, item => _zipObject(fields[channel], item));
     } else {
         if (_isArray(data[1])) {
             result = [ _zipObject(fields[channel], data[1]) ];
         }
     }
+
     return result;
 };
 
 const zipTrades = (channel, data) => {
     let result = [];
     // it can be a set of books or just one book
-    if (_isArray(data[1])) {
-        result = _map(data[1], item => _zipObject(fields[channel], item));
+    if (_isArray(data[0]) || _isArray(data[1])) {
+        const d = _isArray(data[0]) ? data : data[1];
+        result = _map(d, item => _zipObject(fields[channel], item));
     } else {
         if (_isArray(data[2])) {
             result = [ _zipObject(fields[channel], data[2]) ];
@@ -52,7 +56,7 @@ io.on('connection', function(socket){
             if (!msgParsed.event && typeof msgParsed[1] !== 'string') {
                 let data = [];
                 switch(channel) {
-                    case 'books':
+                    case 'book':
                         data = zipBooks(channel, msgParsed[1]);
                         break;
                     case 'trades':
