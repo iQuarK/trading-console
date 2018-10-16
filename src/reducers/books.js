@@ -1,6 +1,5 @@
 import _sortBy from 'lodash/sortBy';
 import _slice from 'lodash/slice';
-import _isArray from 'lodash/isArray';
 
 const initialState = {
   bids: [],
@@ -12,26 +11,15 @@ const books = (state = initialState, action) => {
     case 'ADD_BOOK':
       // if it has an array instead of an object, then all should be processed
       let { bids, asks } = state;
+      const length = action.data.length;
 
-      if (_isArray(action.data)) {
-        const length = action.data.length;
-
-        for(let i=0; i<length; i++) {
-          const elem = action.data[i];
-          if (elem.count > 0) {
-            if (elem.amount <= 0) {
-              asks.push({ ...elem, amount: Math.abs(elem.amount)});
-            } else {
-              bids.push(elem);
-            }
-          }
-        }
-      } else {
-        if (action.data.count > 0) {
-          if (action.data.amount <= 0) {
-            asks.push({ ...action.data, amount: Math.abs(action.data.amount)});
+      for(let i=0; i<length; i++) {
+        const elem = action.data[i];
+        if (elem.count > 0) {
+          if (elem.amount <= 0) {
+            asks.push({ ...elem, amount: Math.abs(elem.amount)});
           } else {
-            bids.push(action.data);
+            bids.push(elem);
           }
         }
       }

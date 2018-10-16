@@ -7,7 +7,36 @@ const port = 3001;
 
 const http = require('http').Server(app);
 const io = require('socket.io')(http);
-const fields = ['price', 'count', 'amount'];
+const fields = {
+    books: ['price', 'count', 'amount'],
+    trades: ['id', 'mts', 'amount', 'price']
+};
+
+export const zipBooks = (channel, data) => {
+    let result = [];
+    // it can be a set of books or just one book
+    if (_isArray(data[1][0])) {
+        result = _map(data[1], item => _zipObject(fields[channel], item));
+    } else {
+        if (_isArray(data[1])) {
+            result = [ _zipObject(fields[channel], data[1]) ];
+        }
+    }
+    return result;
+};
+
+export const zipTrades = (channel, data) => {
+    let result = [];
+    // it can be a set of books or just one book
+    if (_isArray(data[1])) {
+        result = _map(data[1], item => _zipObject(fields[channel], item));
+    } else {
+        if (_isArray(data[2])) {
+            result = [ _zipObject(fields[channel], data[2]) ];
+        }
+    }
+    return result;
+};
 
 io.on('connection', function(socket){
     // The user sends the data to subscribe to a service
@@ -16,20 +45,25 @@ io.on('connection', function(socket){
         const ws = require('ws');
         const w = new ws('wss://api.bitfinex.com/ws/2');
         const dataJson = JSON.parse(data);
+        const channel = dataJson.channel;
 
         w.on('message', (msg) => {
             const msgParsed = JSON.parse(msg);
             if (!msgParsed.event && typeof msgParsed[1] !== 'string') {
-                let data = null;
-
-                if (_isArray(msgParsed[1][0])) {
-                    data = _map(msgParsed[1], item => _zipObject(fields, item));
-                } else {
-                    data = _zipObject(fields, msgParsed[1]);
+                let data = [];
+                switch(channel) {
+                    case 'books':
+                        data = zipBooks(channel, msgParsed[1]);
+                        break;
+                    case 'trades':
+                        data = zipTrades(channel, msgParsed[1]);
+                        break;
+                    default:
+                        data = [];
                 }
-                socket.emit(dataJson.channel, JSON.stringify(data));
+                socket.emit(channel, JSON.stringify(data));
             }
-            console.debug(msg);
+            console.debug(`${channel} ${msg}`);
         });
 
         w.on('open', () => w.send(data));
