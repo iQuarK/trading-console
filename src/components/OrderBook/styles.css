@@ -18,6 +18,15 @@
     text-align: right;
     margin-right: 10px;
 }
+header.book {
+    font-weight: bold;
+}
+.options span {
+    margin-right: 10px;
+}
+.options span:last-child {
+    margin-right: 0;
+}
 .line {
     display: flex;
     position: absolute;

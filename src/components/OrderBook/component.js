@@ -68,22 +68,25 @@ class OrderBook extends Component {
         return (
             <div className="order-book">
                 <h2>Order Book</h2>
-                <div>
-                    Precision:
-                    <select onChange={this.changePrecision}>
-                        <option value="P0">P0</option>
-                        <option value="P1">P1</option>
-                        <option value="P2">P2</option>
-                        <option value="P3">P3</option>
-                    </select>
-
-                    Depth:
-                    <select onChange={this.changeDepth}>
-                        <option value="100">100%</option>
-                        <option value="75">75%</option>
-                        <option value="50">50%</option>
-                        <option value="25">25%</option>
-                    </select>
+                <div className="options">
+                    <span>
+                        Precision:
+                        <select onChange={this.changePrecision}>
+                            <option value="P0">P0</option>
+                            <option value="P1">P1</option>
+                            <option value="P2">P2</option>
+                            <option value="P3">P3</option>
+                        </select>
+                    </span>
+                    <span>
+                        Depth:
+                        <select onChange={this.changeDepth}>
+                            <option value="100">100%</option>
+                            <option value="75">75%</option>
+                            <option value="50">50%</option>
+                            <option value="25">25%</option>
+                        </select>
+                    </span>
                 </div>
                 <div className="g-row g-justify-center">
                     <div className="books">
