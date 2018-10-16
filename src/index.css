@@ -12,3 +12,19 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
+
+.g-row {
+  display: flex;
+  flex-direction: row;
+}
+
+.g-justify-center {
+  justify-content: center;
+}
+.g-spring {
+  flex: 1;
+}
+
+.g-spring-2 {
+  flex: 2;
+}

@@ -1,9 +1,38 @@
-.order-book {
-}
 .book {
-    display: flex;
+    margin-right: 10px;
+    display: grid;
+    grid-template-columns: 80px 105px 80px 80px;
+    column-gap: 10px;
+    row-gap: 1em;
+    z-index: 10;
+    position: relative;
+}
+.book.ask {
+    grid-template-columns: 80px 80px 105px 80px;
+}
+.book:last-child {
+    margin-right: 0;
 }
 .book > * {
-    flex: 1;
+    flex-grow: 4;
     text-align: right;
+    margin-right: 10px;
+}
+.line {
+    display: flex;
+    position: absolute;
+    height: 20px;
+    width: 375px; /* grid sizes + gaps */
+    z-index: 0;
+}
+.line.green {
+    justify-content: flex-end;
+}
+.line.green > div {
+    background-color: lightgreen;
+    width: 50px;
+}
+.line.red > div {
+    background-color: lightcoral;
+    width: 50px;
 }
