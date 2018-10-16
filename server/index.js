@@ -12,7 +12,7 @@ const fields = {
     trades: ['id', 'mts', 'amount', 'price']
 };
 
-export const zipBooks = (channel, data) => {
+const zipBooks = (channel, data) => {
     let result = [];
     // it can be a set of books or just one book
     if (_isArray(data[1][0])) {
@@ -25,7 +25,7 @@ export const zipBooks = (channel, data) => {
     return result;
 };
 
-export const zipTrades = (channel, data) => {
+const zipTrades = (channel, data) => {
     let result = [];
     // it can be a set of books or just one book
     if (_isArray(data[1])) {
@@ -73,3 +73,8 @@ io.on('connection', function(socket){
 http.listen(port, function(){
   console.log('listening on *:3001');
 });
+
+module.exports = {
+    zipBooks,
+    zipTrades
+};
