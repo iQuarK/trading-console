@@ -1,0 +1,17 @@
+.trade {
+    margin-right: 10px;
+    display: grid;
+    grid-template-columns: 80px auto 80px;
+    column-gap: 10px;
+    row-gap: 1em;
+    z-index: 10;
+    position: relative;
+}
+.trade:last-child {
+    margin-right: 0;
+}
+.trade > * {
+    flex-grow: 4;
+    text-align: right;
+    margin-right: 10px;
+}

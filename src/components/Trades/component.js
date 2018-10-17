@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import * as io from 'socket.io-client';
+import moment from 'moment';
 
 import './styles.css';
 
@@ -29,9 +30,33 @@ class Trades extends Component {
     }
 
     render() {
-        console.log(this.props.trades)
-        return (<div>
-            <h2>Trades</h2>
+        const { trades: { list } } = this.props;
+        return (
+            <div>
+                <h2>Trades</h2>
+            
+                <div className="g-row g-justify-center">
+                    <div className="trades">
+                        <header className="trade">
+                            <div className="time">Time</div>
+                            <div className="price">Price</div>
+                            <div className="amount">Amount</div>
+                        </header>
+                    {
+                        list.length && list.map((trade, idx) =>
+                            <div key={idx} className="trade">
+                                <div className="time">
+                                    {
+                                        moment(trade.mts).format('HH:mm:ss')
+                                    }
+                                </div>
+                                <div className="price">{trade.price}</div>
+                                <div className="amount">{trade.amount}</div>
+                            </div>
+                        )
+                    }
+                    </div>
+                </div>
             </div>);
     }
 }

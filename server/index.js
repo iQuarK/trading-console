@@ -30,7 +30,7 @@ const zipBooks = (channel, data) => {
 
 const zipTrades = (channel, data) => {
     let result = [];
-    // it can be a set of books or just one book
+    // it can be a set of trades or just one trade
     if (_isArray(data[0]) || _isArray(data[1])) {
         const d = _isArray(data[0]) ? data : data[1];
         result = _map(d, item => _zipObject(fields[channel], item));
@@ -40,6 +40,12 @@ const zipTrades = (channel, data) => {
         }
     }
     return result;
+};
+
+// short functions to check if a piece of data is a valid book or trade
+const isValidBook = data => typeof data[1] !== 'string';
+const isValidTrades = data => {
+    return !(data.length === 2 && typeof data[1] !== 'string');
 };
 
 io.on('connection', function(socket){
@@ -53,21 +59,27 @@ io.on('connection', function(socket){
 
         w.on('message', (msg) => {
             const msgParsed = JSON.parse(msg);
-            if (!msgParsed.event && typeof msgParsed[1] !== 'string') {
-                let data = [];
+            if (!msgParsed.event &&
+                ((channel === 'book' && isValidBook(msgParsed)) || 
+                (channel === 'trades' && isValidTrades(msgParsed)))
+            ) {
                 switch(channel) {
                     case 'book':
-                        data = zipBooks(channel, msgParsed[1]);
+                        const bookZipped = zipBooks(channel, msgParsed);
+                        if (bookZipped.length) {
+                            socket.emit(channel, JSON.stringify(bookZipped));
+                        }
                         break;
                     case 'trades':
-                        data = zipTrades(channel, msgParsed[1]);
+                        const tradesZipped = zipTrades(channel, msgParsed);
+                        if (tradesZipped.length) {
+                            socket.emit(channel, JSON.stringify(tradesZipped));
+                        }
                         break;
                     default:
-                        data = [];
+                        break;
                 }
-                socket.emit(channel, JSON.stringify(data));
             }
-            console.debug(`${channel} ${msg}`);
         });
 
         w.on('open', () => w.send(data));
